@@ -18,7 +18,7 @@ defmodule GeoTask.TransitionTest do
     test "allowed to create new task" do
     end
 
-    test "allowed any other transitions" do
+    test "forbidden any other transitions" do
     end
   end
 end
