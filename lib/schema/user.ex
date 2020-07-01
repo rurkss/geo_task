@@ -6,6 +6,8 @@ defmodule GeoTask.Schema.User do
   alias GeoTask.Schema.User
   alias GeoTask.Repo
 
+  @roles ["manager", "driver"]
+
   schema "users" do
     field(:token, :string)
     field(:role, :string)
@@ -13,4 +15,25 @@ defmodule GeoTask.Schema.User do
     has_many(:driver_task, GeoTask.Schema.Task, foreign_key: :driver)
     has_many(:manager_task, GeoTask.Schema.Task, foreign_key: :manager)
   end
+
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:role])
+    |> validate_required([:role])
+    |> validate_role()
+    |> generate_token()
+  end
+
+  defp generate_token(changeset) do
+    changeset |> put_change(:token, Ecto.UUID.generate())
+  end
+
+  defp validate_role(changeset) do
+    role = get_change(changeset, :role)
+    case role in @roles do
+      true -> changeset
+      false -> add_error(changeset, :role, "role is not in a list")
+    end
+  end
+
 end
