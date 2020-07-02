@@ -1,6 +1,7 @@
 defmodule GeoTask.Schema.Task do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   alias GeoTask.Repo
   alias GeoTask.Schema.{Task, User}
@@ -40,7 +41,6 @@ defmodule GeoTask.Schema.Task do
         } = changeset
       )
       when is_float(long_from) and is_float(lat_from) and is_float(long_to) and is_float(lat_to) do
-
     geo_from = %Geo.Point{coordinates: {long_from, lat_from}, srid: 4326}
     geo_to = %Geo.Point{coordinates: {long_to, lat_to}, srid: 4326}
 
@@ -55,7 +55,6 @@ defmodule GeoTask.Schema.Task do
   def find(id), do: Repo.get_by(__MODULE__, id: id) |> Repo.preload([:driver, :manager])
 
   def may_by_assigned?(task_id) do
-
     task = Task.find(task_id)
 
     case task.driver_id do
@@ -66,4 +65,17 @@ defmodule GeoTask.Schema.Task do
 
   def may_by_assigned?(nil), do: {:error, :task_not_found}
 
+  def get_closest(%{long: long, lat: lat}) do
+    Repo.all(
+      from(task in Task,
+        select: %{
+          distance:
+            fragment("ST_Distance(?, ST_Point(?, ?)::geography)", task.location_from, ^long, ^lat),
+          task_id: task.id
+        },
+        where: task.status == "new",
+        order_by: fragment("location_from <-> st_makepoint(?,?)::geography", ^long, ^lat)
+      )
+    )
+  end
 end

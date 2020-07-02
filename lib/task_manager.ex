@@ -47,4 +47,7 @@ defmodule GeoTask.TaskManager do
       |> Repo.update()
     end
   end
+
+  def closest_task(%{long: long, lat: lat} = params), do: Task.get_closest(params)
+  def closest_task(_), do: {:error, :invalid_params}
 end
