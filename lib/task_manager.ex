@@ -48,6 +48,6 @@ defmodule GeoTask.TaskManager do
     end
   end
 
-  def closest_task(%{long: long, lat: lat} = params), do: Task.get_closest(params)
+  def closest_task(%{long: _long, lat: _lat} = params), do: Task.get_closest(params)
   def closest_task(_), do: {:error, :invalid_params}
 end

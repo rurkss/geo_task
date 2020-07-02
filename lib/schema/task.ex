@@ -54,6 +54,8 @@ defmodule GeoTask.Schema.Task do
 
   def find(id), do: Repo.get_by(__MODULE__, id: id) |> Repo.preload([:driver, :manager])
 
+  def may_by_assigned?(nil), do: {:error, :task_not_found}
+  
   def may_by_assigned?(task_id) do
     task = Task.find(task_id)
 
@@ -62,8 +64,6 @@ defmodule GeoTask.Schema.Task do
       _ -> {:error, :task_already_assigned}
     end
   end
-
-  def may_by_assigned?(nil), do: {:error, :task_not_found}
 
   def get_closest(%{long: long, lat: lat}) do
     Repo.all(
