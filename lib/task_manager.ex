@@ -1,4 +1,4 @@
-defmodule GeoTask.TaskAssigner do
+defmodule GeoTask.TaskManager do
   alias GeoTask.Schema.{User, Task}
   alias GeoTask.{Repo, Transition}
 
