@@ -1,7 +1,6 @@
 defmodule GeoTask.Schema.Task do
   use Ecto.Schema
   import Ecto.Changeset
-  import Ecto.Query
 
   alias GeoTask.Repo
   alias GeoTask.Schema.{Task, User}
@@ -18,11 +17,18 @@ defmodule GeoTask.Schema.Task do
     field(:geopostions, {:array, :map}, virtual: true)
   end
 
-  def changeset(task, attrs) do
+  def changeset(task, attrs, %User{role: "manager"} = user) do
     task
-    |> cast(attrs, [:geopostions])
+    |> cast(attrs, [:geopostions, :status])
     |> validate_required([:geopostions])
     |> cast_geo_point()
+    |> put_assoc(:manager, user)
+  end
+
+  def changeset(task, attrs, %User{role: "driver"} = user) do
+    task
+    |> cast(attrs, [:status])
+    |> put_assoc(:driver, user)
   end
 
   def cast_geo_point(
@@ -45,4 +51,19 @@ defmodule GeoTask.Schema.Task do
 
   def cast_geo_point(changeset),
     do: add_error(changeset, :geopostions, "geopostions has to be a list with 2 elements")
+
+  def find(id), do: Repo.get_by(__MODULE__, id: id) |> Repo.preload([:driver, :manager])
+
+  def may_by_assigned?(task_id) do
+
+    task = Task.find(task_id)
+
+    case task.driver_id do
+      nil -> :ok
+      _ -> {:error, :task_already_assigned}
+    end
+  end
+
+  def may_by_assigned?(nil), do: {:error, :task_not_found}
+
 end

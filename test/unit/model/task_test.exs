@@ -7,7 +7,7 @@ defmodule GeoTask.TaskTest do
 
   describe "changest task" do
     test "validate geoposition: failure if empty" do
-      task = Task.changeset(%Task{}, %{})
+      task = Task.changeset(%Task{}, %{}, build(:manager))
 
       assert task.valid? == false
     end
@@ -21,7 +21,7 @@ defmodule GeoTask.TaskTest do
         ]
       }
 
-      task = Task.changeset(%Task{}, attrs)
+      task = Task.changeset(%Task{}, attrs, build(:manager))
 
       assert task.valid? == false
     end
@@ -34,7 +34,7 @@ defmodule GeoTask.TaskTest do
         ]
       }
 
-      task = Task.changeset(%Task{}, attrs)
+      task = Task.changeset(%Task{}, attrs, build(:manager))
 
       assert task.valid? == false
     end
@@ -46,7 +46,7 @@ defmodule GeoTask.TaskTest do
           %{lat: Faker.Address.latitude(), long: Faker.Address.longitude()}
         ]
       }
-      task = Task.changeset(%Task{}, attrs)
+      task = Task.changeset(%Task{}, attrs, build(:manager))
 
       assert task.valid?
     end
