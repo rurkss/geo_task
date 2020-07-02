@@ -10,7 +10,8 @@ defmodule GeoTask.Application do
     children = [
       # Starts a worker by calling: Pg.Worker.start_link(arg)
       # {Pg.Worker, arg},
-      GeoTask.Repo
+      GeoTask.Repo,
+      GeoTask.TaskManager
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

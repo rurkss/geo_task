@@ -2,6 +2,25 @@ defmodule GeoTask.TaskManager do
   alias GeoTask.Schema.{User, Task}
   alias GeoTask.{Repo, Transition}
 
+  use GenServer
+
+  def start_link(state \\ []) do
+    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+  end
+
+  def init(state) do
+    {:ok, state}
+  end
+
+  def assign_in_queue(task_id, token) do
+    __MODULE__
+      |> GenServer.call({:assign, task_id, token})
+  end
+
+  def handle_call({:assign, task_id, token}, _from, state) do
+    {:reply, assign(task_id, token), state}
+  end
+
   def create(params, token) do
     user = User.find_by_token(token)
 
