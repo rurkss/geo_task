@@ -2,10 +2,7 @@ defmodule GeoTask.TransitionTest do
   use ExUnit.Case, async: true
 
   import GeoTask.Factory
-
-  alias GeoTask.Transition
-  alias GeoTask.Schema.Task
-  alias GeoTask.Schema.User
+  alias GeoTask.Schema.{User, Task, Transition}
 
   describe "driver transitions" do
     test "allowed change from new to assign" do

@@ -1,4 +1,4 @@
-defmodule GeoTask.TransitionTest do
+defmodule GeoTask.UserTest do
   use ExUnit.Case, async: true
 
   import GeoTask.Factory
