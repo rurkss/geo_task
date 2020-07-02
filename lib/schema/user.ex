@@ -24,6 +24,8 @@ defmodule GeoTask.Schema.User do
     |> generate_token()
   end
 
+  def find_by_token(token), do: Repo.get_by(__MODULE__, token: token)
+
   defp generate_token(changeset) do
     changeset |> put_change(:token, Ecto.UUID.generate())
   end
