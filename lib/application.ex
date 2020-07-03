@@ -11,7 +11,12 @@ defmodule GeoTask.Application do
       # Starts a worker by calling: Pg.Worker.start_link(arg)
       # {Pg.Worker, arg},
       GeoTask.Repo,
-      GeoTask.TaskManager
+      GeoTask.TaskManager,
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: GeoTask.Endpoint,
+        options: [port: 4001]
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
