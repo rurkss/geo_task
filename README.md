@@ -35,12 +35,12 @@ curl --request POST \
 
 ```
 curl --request POST \
-  --url http://127.0.0.1:4001/closest_delivery \
+  --url http://127.0.0.1:4001/closest_pickup \
   --header 'content-type: application/json' \
   --data '{
 	"long": 24.031111,
 	"lat": 49.842957
-}'
+}''
 ```
 
 ```

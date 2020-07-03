@@ -23,7 +23,7 @@ defmodule GeoTask.Endpoint do
 
   # A simple route to test that the server is up
   # Note, all routes must return a connection as per the Plug spec.
-  post "/closest_delivery" do
+  post "/closest_pickup" do
     {status, body} =
       case conn.body_params do
         %{"long" => long, "lat" => lat} ->
