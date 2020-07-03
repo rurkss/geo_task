@@ -6,6 +6,8 @@ defmodule GeoTask.Schema.Task do
   alias GeoTask.Repo
   alias GeoTask.Schema.{Task, User}
 
+  @derive {Poison.Encoder, only: [:id, :status]}
+
   schema "tasks" do
     field(:location_from, Geo.PostGIS.Geometry)
     field(:location_to, Geo.PostGIS.Geometry)
@@ -54,9 +56,7 @@ defmodule GeoTask.Schema.Task do
 
   def find(id), do: Repo.get_by(__MODULE__, id: id) |> Repo.preload([:driver, :manager])
 
-  def may_by_assigned?(nil), do: {:error, :task_not_found}
-  
-  def may_by_assigned?(task_id) do
+  def may_by_assigned?(task_id) when is_integer(task_id) do
     task = Task.find(task_id)
 
     case task.driver_id do
@@ -65,7 +65,9 @@ defmodule GeoTask.Schema.Task do
     end
   end
 
-  def get_closest(%{long: long, lat: lat}) do
+  def may_by_assigned?(_), do: {:error, :task_not_found}
+
+  def get_closest(%{long: long, lat: lat}) when is_float(long) and is_float(lat) do
     Repo.all(
       from(task in Task,
         select: %{
@@ -78,4 +80,6 @@ defmodule GeoTask.Schema.Task do
       )
     )
   end
+
+  def get_closest(_), do: []
 end
