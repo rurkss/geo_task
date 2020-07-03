@@ -54,11 +54,12 @@ curl --request POST \
 ```
 
 ```
- curl --request POST \
+curl --request POST \
   --url http://127.0.0.1:4001/deliver \
   --header 'content-type: application/json' \
   --data '{
-	"token": "24ebbdf1-d2c7-40f7-911b-ac73cca1ffa6"
+	"token": "24ebbdf1-d2c7-40f7-911b-ac73cca1ffa6",
+	"task_id": 10
 }'
  ```
 
